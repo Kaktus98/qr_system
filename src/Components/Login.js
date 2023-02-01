@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import "./Navbar"
 
-export default function Login() {
+
+const Login = () => {
   return (
-    <View>
-      <Text>Login</Text>
-    </View>
+        <div>
+
+        </div>
+
+    
   )
 }
 
-const styles = StyleSheet.create({})
+export default Login
