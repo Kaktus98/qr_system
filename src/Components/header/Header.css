@@ -1,5 +1,18 @@
 .header {
   background-color: rgb(165, 150, 131);
+  height: 100px;
+}
+
+.layoutHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nazovStranky {
+  align-items: center;
+  font-size: 15px;
+  color: black;
 }
 
 .logo {
