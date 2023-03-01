@@ -12,7 +12,7 @@ const IndroducingPage = () => {
 
   return (
     <div>
-      <Header></Header>
+      <Header/>
       <div>
         <button
           className="compulsoryAttendace"
@@ -26,7 +26,7 @@ const IndroducingPage = () => {
         <button
           className="optionalAttendace"
           type="button"
-          onClick={console.log("Gombik bol stlačený")}
+          //onClick={console.log("Gombik bol stlačený")}
         >
           Nepovinná evidencia dochádzky
         </button>

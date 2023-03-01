@@ -1,9 +1,23 @@
 import React from "react";
+import Header from "./header/Header";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/studentOverview");
+  };
+
   return (
     <div>
-      <h1>HELLO WORLD</h1>
+      <Header />
+      <div>
+        <button>Naskenuj QR</button>
+        <button type="button" onClick={handleClick}>
+          Prehľad
+        </button>
+      </div>
     </div>
   );
 };

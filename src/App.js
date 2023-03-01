@@ -5,6 +5,7 @@ import "./App.css";
 import IndroducingPage from "./components/IndroducingPage";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
+import StudentOverview from "./student/StudentOverview";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<IndroducingPage />} />
           <Route path="login" element={<Login />} />
           <Route path="home" element={<HomePage />} />
+          <Route path="studentOverview" element={<StudentOverview/>}/>
         </Routes>
       </BrowserRouter>
     </div>
