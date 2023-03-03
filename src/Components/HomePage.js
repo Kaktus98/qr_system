@@ -9,16 +9,26 @@ const HomePage = () => {
     navigate("/studentOverview");
   };
 
+  /*  const handleLogin = () => {
+    setLogin(true);
+  } */
+
   return (
-    <div>
+    <>
       <Header />
-      <div>
-        <button>Naskenuj QR</button>
-        <button type="button" onClick={handleClick}>
-          Prehľad
-        </button>
+      <div className="d-flex justify-content-center align-items-center  vh-100">
+        <div className="col-md-4">
+          <button className="btn btn-dark btn-lg mb-3 mx-2">Naskenuj QR</button>
+          <button
+            className="btn btn-secondary btn-lg mb-3 mx-2"
+            type="button"
+            onClick={handleClick}
+          >
+            Prehľad
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

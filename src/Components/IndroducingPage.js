@@ -11,27 +11,23 @@ const IndroducingPage = () => {
   };
 
   return (
-    <div>
-      <Header/>
-      <div>
-        <button
-          className="compulsoryAttendace"
-          type="button"
-          onClick={handleClick}
-        >
-          Povinná evidencia dochádzky
-        </button>
+    <>
+      <Header />
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="col-md-4">
+          <button
+            className="btn btn-success btn-lg mb-3 w-100"
+            type="button"
+            onClick={handleClick}
+          >
+            Povinná evidencia dochádzky
+          </button>
+          <button className="btn btn-warning btn-lg w-100" type="button">
+            Nepovinná evidencia dochádzky
+          </button>
+        </div>
       </div>
-      <div>
-        <button
-          className="optionalAttendace"
-          type="button"
-          //onClick={console.log("Gombik bol stlačený")}
-        >
-          Nepovinná evidencia dochádzky
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

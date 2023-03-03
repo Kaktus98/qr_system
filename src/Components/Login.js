@@ -3,13 +3,19 @@ import Header from "./header/Header";
 import { useNavigate } from "react-router-dom";
 //import axios from "axios";
 import "./Login.css";
+import { setIdStudent } from "../reducer/Actions";
+import { useSelector, useDispatch } from "react-redux";
+//import store from "../reducer/Store";
 
 const url = "http://localhost:8080/login";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [studentId, setStudentId] = useState("");
+  //const [studentId, setStudentId] = useState("");
+  //const [, setLogin] = useState(false);
+  const dispatch = useDispatch();
+  const id_student = useSelector((state) => state.id_student);
 
   /* USESTATE -> hook vracia dva hodnoty: prvý je aktuálny stav a druhý je funkcia na zmenu stavu, viď onChange funkciu */
 
@@ -34,7 +40,7 @@ const Login = () => {
       })
       .then((data) => data["0"])
       .then((identifikator) => {
-        setStudentId(identifikator["id_student"]);
+        dispatch(setIdStudent(identifikator["id_student"]));
         navigate("/home");
       })
       .catch((error) => {
@@ -42,25 +48,10 @@ const Login = () => {
         console.error(error);
       });
   };
-  /* const sendLoginRequest = (e) => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:8080/login", {email} )
-      .then((response) => {
-        setStudentId(response.data.id_student);
-        // handle successful login here
-      })
-      .catch((error) => {
-        // handle login error here
-        console.error(error);
-      });
-  };
-  console.log(studentId);
- */
 
   useEffect(() => {
-    console.log(studentId);
-  });
+    console.log(id_student);
+  }, [id_student]);
 
   return (
     <div>
@@ -69,6 +60,7 @@ const Login = () => {
         <form onSubmit={sendLoginRequest}>
           <div>
             {/* <label htmlFor="email">email</label> */}
+
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -79,6 +71,7 @@ const Login = () => {
               required
             />
           </div>
+
           <button type="submit">Prihlásiť sa</button>
         </form>
       </div>
