@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from "react";
-import "./Header.css";
 import { Button, Navbar, Container, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { resetIdStudent } from "../../reducer/Actions";
-//import store from "../../reducer/Store";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const dispatch = useDispatch();
-  const id_studentIsNull = useSelector((state) => state.id_student);
+  const [idStudent, setIdStudent] = useState(null);
+
+  //const dispatch = useDispatch();
+  //const idStudent = useSelector((state) => state.id_student);
 
   const handleClick = () => {
-    //vymaz id užívateľa po odhlásení ktoré už máme uložené
-    dispatch(resetIdStudent(id_studentIsNull));
-    //console.log(store.getState());
-    //console.log(id_student);
+    //vymaz id užívateľa po odhlásení ktoré už máme uložené v localStorage
+
+    localStorage.removeItem("id_student");
+    setIdStudent(null);
     navigate("/");
-    setIsLoggedIn(false);
   };
 
   const handleLogo = () => {
-    navigate("/home");
+    //navigate("/home");
   };
 
   useEffect(() => {
-    console.log(id_studentIsNull);
-  }, [id_studentIsNull]);
+    const idStudentLS = localStorage.getItem("id_student");
+    setIdStudent(idStudentLS);
+  }, []); //ked sa zmeni id student av [] tak vyrenderuj log
 
   return (
     <Navbar bg="light" expand="lg">
@@ -41,7 +38,7 @@ const Header = () => {
             <Nav.Link href="#home">Názov stránky</Nav.Link>
           </Nav>
           <Nav>
-            {isLoggedIn && (
+            {idStudent && (
               <Button variant="outline-secondary" onClick={handleClick}>
                 Odhlásenie
               </Button>

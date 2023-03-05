@@ -1,40 +1,68 @@
-import React, { useState, useEffect, useCallback } from "react";
-import Header from "../components/header/Header";
-//import DatePicker from "react-datepicker";
+import React, { useState, useEffect } from "react";
+//import Header from "../components/header/Header";
+import DatePicker from "react-datepicker";
 import { useSelector } from "react-redux";
 import "./StudentOverview.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 const StudentOverview = () => {
   const [data, setData] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("Ekonometria");
-  const id_studentNonNull = useSelector((state) => state.id_student);
-  //const [selectedDate, setSelectedDate] = useState(new Date());
+  const id_student = useSelector((state) => state.id_student);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const fetchData = useCallback(
-    async (subject) => {
-      const response = await fetch(
-        `http://localhost:8080/prehlad/${id_studentNonNull}?den=Pondelok&nazov_predmetu=${subject}`
-      );
-      const json = await response.json();
-      console.log(json);
-      setData(json);
-      console.log();
-    },
-    [id_studentNonNull]
-  );
+  const getSlovakDay = (id) => {
+    switch (id) {
+      case 0:
+        return "Nedela";
+      case 1:
+        return "Pondelok";
+      case 2:
+        return "Utorok";
+      case 3:
+        return "Streda";
+      case 4:
+        return "Stvrtok";
+      case 5:
+        return "Piatok";
+      case 6:
+        return "Sobota";
+      default:
+        return "null";
+    }
+  };
 
   useEffect(() => {
-    fetchData(selectedSubject);
-  }, [selectedSubject, fetchData]);
+    const day = getSlovakDay(new Date(selectedDate).getUTCDay());
+    const storedId = localStorage.getItem("id_student");
+    const id = parseInt(storedId, 10);
+    fetch(
+      `http://localhost:8080/prehlad/${id}?den=${day}&nazov_predmetu=${selectedSubject}`
+    )
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to retrieve data");
+        }
+        return r.json();
+      })
+      .then((d) => setData(d))
+      .catch((e) => console.error(e));
+  }, [selectedSubject, id_student, selectedDate]); //ak sa zmeni jedna z hodnout tak sa zmení aj URL
 
-  const subjects = ["Matematika", "Ekonometria", "Fyzika"];
+  const subjects = [
+    "Matematika",
+    "Ekonometria",
+    "Manažment",
+    "Marketing",
+    "Softvérové Inžinierstvo",
+    "Databázové systémy",
+    "UX dizajn",
+  ];
 
   return (
     <>
-      <Header />
       <div className="d-flex justify-content-center mb-3">
         <div className="form-group">
-          <label htmlFor="subjectDropdown">Vyberte predmet:</label>
           <select
             className="form-control"
             id="subjectDropdown"
@@ -47,47 +75,55 @@ const StudentOverview = () => {
               </option>
             ))}
           </select>
+          <div className="react-datepicker-wrapper">
+            <DatePicker
+              id="datePicker"
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+            />
+          </div>
         </div>
       </div>
-      <label htmlFor="datePicker">Vyberte dátum:</label>
-      <br />
-      {/* <DatePicker
-        id="datePicker"
-        selected={selectedDate}
-        onChange={(e) => setSelectedDate(e.targer.value)}
-      /> */}
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover table-striped text-center">
-          <thead>
-            <tr>
-              <th>id_dochadzka</th>
-              <th>meno</th>
-              <th>priezvisko</th>
-              <th>den</th>
-              <th>nazov_predmetu</th>
-              <th>status</th>
-              <th>datum</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, i) => (
-              <tr key={i}>
-                <th>{row.id_dochadzkaStudent}</th>
-                <td>{row.meno}</td>
-                <td>{row.priezvisko}</td>
-                <td>{row.den}</td>
-                <td>{row.nazov_predmetu}</td>
-                <td>{row.status ? "Prítomný" : "Neprítomný"}</td>
-                <td>{row.datum}</td>
+      {/* <label htmlFor="datePicker">Vyberte dátum:</label>
+
+      <br /> */}
+
+      {data.length === 0 ? (
+        <div className="noDataMessage">
+          <p>Pre zvolený deň neexistuje záznam</p>
+        </div>
+      ) : (
+        <div className="d-flex justify-content-center">
+          <table className="table table-striped table-bordered table-hover align-middle">
+            <thead className="table-secondary">
+              <tr>
+                <th>Id_dochadzka</th>
+                <th>Meno</th>
+                <th>Priezvisko</th>
+                <th>Deň</th>
+                <th>Predmet</th>
+                <th>Status</th>
+                <th>Dátum</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {data.map((row, i) => (
+                <tr key={i}>
+                  <th>{row.id_dochadzkaStudent}</th>
+                  <td>{row.meno}</td>
+                  <td>{row.priezvisko}</td>
+                  <td>{row.den}</td>
+                  <td>{row.nazov_predmetu}</td>
+                  <td>{row.status ? "Prítomný" : "Neprítomný"}</td>
+                  <td>{row.datum}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 };
 
 export default StudentOverview;
- 
- 

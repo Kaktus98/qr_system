@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "./header/Header";
+//import Header from "./header/Header";
 import "./IndroducingPage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ const IndroducingPage = () => {
 
   return (
     <>
-      <Header />
+      
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="col-md-4">
           <button

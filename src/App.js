@@ -6,16 +6,18 @@ import IndroducingPage from "./components/IndroducingPage";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import StudentOverview from "./student/StudentOverview";
+import Header from "./components/header/Header";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<IndroducingPage />} />
           <Route path="login" element={<Login />} />
           <Route path="home" element={<HomePage />} />
-          <Route path="studentOverview" element={<StudentOverview/>}/>
+          <Route path="studentOverview" element={<StudentOverview />} />
         </Routes>
       </BrowserRouter>
     </div>
