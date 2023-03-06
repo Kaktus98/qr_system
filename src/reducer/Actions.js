@@ -1,12 +1,25 @@
-export const setIdStudent = (id_student) => {
+export const setId = (id) => {
     return {
-      type: 'SET_ID_STUDENT',
-      payload: id_student,
+      type: 'SET_ID',
+      payload: id,
     };
   };
   
-  export const resetIdStudent = () => {
+  export const resetId = () => {
     return {
-      type: 'RESET_ID_STUDENT',
+      type: 'RESET_ID',
+    };
+  };
+
+  export const setRole = (role) => {
+    return {
+      type: 'SET_ROLE',
+      payload: role,
+    };
+  };
+  
+  export const resetRole = () => {
+    return {
+      type: 'RESET_ROLE',
     };
   };

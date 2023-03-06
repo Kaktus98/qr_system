@@ -1,4 +1,20 @@
 .formularLogin {
   margin-top: 150px;
-  
+}
+
+#email {
+  border-radius: 2;
+  box-shadow: 10%;
+  margin: 10%;
+}
+
+.btn {
+  margin: 5%;
+}
+
+.formularLogin {
+  margin-left: 25%;
+  margin-right: 25%;
+  max-height: 25%;
+  background-color: #ead9bb;
 }

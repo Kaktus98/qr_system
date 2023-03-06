@@ -1,19 +1,16 @@
 import React, { useState } from "react";
-//import Header from "./header/Header";
 import { useNavigate } from "react-router-dom";
-//import axios from "axios";
 import "./Login.css";
-//import { setIdStudent } from "../reducer/Actions";
-//import { useDispatch } from "react-redux";
-//import store from "../reducer/Store";
+import { setId } from "../reducer/Actions";
+import { setRole } from "../reducer/Actions";
+import { useDispatch } from "react-redux";
 
 const url = "http://localhost:8080/login";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  //const dispatch = useDispatch();
-  //const id_student = useSelector((state) => state.id_student);
+  const dispatch = useDispatch();
 
   /* USESTATE -> hook vracia dva hodnoty: prvý je aktuálny stav a druhý je funkcia na zmenu stavu, viď onChange funkciu */
 
@@ -37,11 +34,17 @@ const Login = () => {
         } else return Promise.reject("Invalid login attempt");
       })
       .then((data) => data["0"])
+
       .then((identifikator) => {
-        //dispatch(setIdStudent(identifikator["id_student"]));
-        navigate("/home");
-        localStorage.setItem("id_student", identifikator["id_student"]); //uloženie premennej do localStorage browsera
-        console.log(localStorage.getItem("id_student")); //následne viem k hodnote pristupovat cet getItem :)), v komponente ho potrebujem použiť
+        dispatch(setId(identifikator["id"]));
+        dispatch(setRole(identifikator["rola"])); // pridanie novej akcie SET_ROLE
+        console.log(identifikator["rola"]);
+        //navigate("/home");
+        if (identifikator["rola"] === "STUDENT") {
+          navigate("/homeStudent");
+        } else if (identifikator["rola"] === "TEACHER") {
+          navigate("/homeTeacher");
+        }
       })
       .catch((error) => {
         // spracovanie chyby
@@ -49,13 +52,11 @@ const Login = () => {
       });
   };
 
-
   return (
-    <div>
-      {/* <Header /> */}
-      <div className="formularLogin">
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="p-5 bg-light rounded border">
         <form onSubmit={sendLoginRequest}>
-          <div>
+          <div className="form-group">
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -64,14 +65,16 @@ const Login = () => {
               id="email"
               name="email"
               required
+              className="form-control"
             />
           </div>
 
-          <button type="submit">Prihlásiť sa</button>
+          <button type="submit" className="btn btn-primary btn-block">
+            Prihlásiť sa
+          </button>
         </form>
       </div>
     </div>
   );
 };
-
 export default Login;

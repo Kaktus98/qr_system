@@ -1,45 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button, Navbar, Container, Nav } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setId } from "../../reducer/Actions";
+
 
 const Header = () => {
   const navigate = useNavigate();
-  const [idStudent, setIdStudent] = useState(null);
-
-  //const dispatch = useDispatch();
-  //const idStudent = useSelector((state) => state.id_student);
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const id_visitor = useSelector((state) => state.id);
+  const role = useSelector((state) => state.role);
 
   const handleClick = () => {
-    //vymaz id užívateľa po odhlásení ktoré už máme uložené v localStorage
-
-    localStorage.removeItem("id_student");
-    setIdStudent(null);
+    dispatch(setId(null));
     navigate("/");
   };
 
   const handleLogo = () => {
-    //navigate("/home");
+    if (role === "STUDENT") {
+      navigate("/homeStudent");
+    } else {
+      navigate("/homeTeacher");
+    }
   };
 
-  useEffect(() => {
-    const idStudentLS = localStorage.getItem("id_student");
-    setIdStudent(idStudentLS);
-  }, []); //ked sa zmeni id student av [] tak vyrenderuj log
+  // Kontrola, či je užívateľ prihlásený
+  const isLoggedIn = id_visitor !== null;
+
+  // Kontrola, či aktuálna cesta nie je úvodná stránka alebo stránka prihlásenia
+  const isOnHomeOrLogin =
+    location.pathname === "/" || location.pathname === "/login";
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="primary" expand="lg">
       <Container>
         <Navbar.Brand href="#home" onClick={handleLogo}>
-          Logo
+          QR_AttendanceSystem
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mx-auto">
-            <Nav.Link href="#home">Názov stránky</Nav.Link>
+            <Nav.Link href="#home"></Nav.Link>
           </Nav>
           <Nav>
-            {idStudent && (
-              <Button variant="outline-secondary" onClick={handleClick}>
+            {/* Kontrola, či má užívateľ byť prihlásený a aktuálna cesta nie je úvodná stránka alebo stránka prihlásenia */}
+            {isLoggedIn && !isOnHomeOrLogin && (
+              <Button
+                
+                onClick={handleClick}
+                className="bg-dark hover-darkgreen"
+              >
                 Odhlásenie
               </Button>
             )}

@@ -12,7 +12,6 @@ const IndroducingPage = () => {
 
   return (
     <>
-      
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="col-md-4">
           <button

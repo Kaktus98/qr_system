@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const StudentOverview = () => {
   const [data, setData] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("Ekonometria");
-  const id_student = useSelector((state) => state.id_student);
+  const id_student = useSelector((state) => state.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const getSlovakDay = (id) => {
@@ -34,10 +34,11 @@ const StudentOverview = () => {
 
   useEffect(() => {
     const day = getSlovakDay(new Date(selectedDate).getUTCDay());
-    const storedId = localStorage.getItem("id_student");
-    const id = parseInt(storedId, 10);
+    // const storedId = localStorage.getItem("id_student");
+    // const id = parseInt(storedId, 10);
+    console.log(id_student);
     fetch(
-      `http://localhost:8080/prehlad/${id}?den=${day}&nazov_predmetu=${selectedSubject}`
+      `http://localhost:8080/prehlad/${id_student}?den=${day}&nazov_predmetu=${selectedSubject}`
     )
       .then((r) => {
         if (!r.ok) {
@@ -97,24 +98,26 @@ const StudentOverview = () => {
           <table className="table table-striped table-bordered table-hover align-middle">
             <thead className="table-secondary">
               <tr>
-                <th>Id_dochadzka</th>
                 <th>Meno</th>
                 <th>Priezvisko</th>
                 <th>Deň</th>
                 <th>Predmet</th>
                 <th>Status</th>
-                <th>Dátum</th>
+                <th>Dátum </th>
               </tr>
             </thead>
             <tbody>
               {data.map((row, i) => (
                 <tr key={i}>
-                  <th>{row.id_dochadzkaStudent}</th>
                   <td>{row.meno}</td>
                   <td>{row.priezvisko}</td>
                   <td>{row.den}</td>
                   <td>{row.nazov_predmetu}</td>
-                  <td>{row.status ? "Prítomný" : "Neprítomný"}</td>
+                  <td
+                    style={{ background: row.status ? "#7AEA90" : "#D98886" }}
+                  >
+                    {row.status ? "Prítomný" : "Neprítomný"}
+                  </td>
                   <td>{row.datum}</td>
                 </tr>
               ))}
