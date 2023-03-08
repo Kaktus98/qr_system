@@ -1,25 +1,13 @@
-export const setId = (id) => {
+  export const setUser = ({id, role}) => {
     return {
-      type: 'SET_ID',
-      payload: id,
-    };
-  };
-  
-  export const resetId = () => {
-    return {
-      type: 'RESET_ID',
-    };
-  };
+        type: "SET_USER",
+        id: id,
+        role: role,
+    }
+}
 
-  export const setRole = (role) => {
+export const resetUser = () => {
     return {
-      type: 'SET_ROLE',
-      payload: role,
-    };
-  };
-  
-  export const resetRole = () => {
-    return {
-      type: 'RESET_ROLE',
-    };
-  };
+        type: "RESET_USER"
+    }
+}

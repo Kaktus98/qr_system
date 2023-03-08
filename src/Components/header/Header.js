@@ -3,8 +3,7 @@ import { Button, Navbar, Container, Nav } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { setId } from "../../reducer/Actions";
-
+import { resetUser } from "../../reducer/Actions";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -14,14 +13,14 @@ const Header = () => {
   const role = useSelector((state) => state.role);
 
   const handleClick = () => {
-    dispatch(setId(null));
+    dispatch(resetUser());
     navigate("/");
   };
 
   const handleLogo = () => {
-    if (role === "STUDENT") {
+    if (role === "STUDENT" && isLoggedIn ) {
       navigate("/homeStudent");
-    } else {
+    } else if (role === "TEACHER" && isLoggedIn) {
       navigate("/homeTeacher");
     }
   };
@@ -47,11 +46,7 @@ const Header = () => {
           <Nav>
             {/* Kontrola, či má užívateľ byť prihlásený a aktuálna cesta nie je úvodná stránka alebo stránka prihlásenia */}
             {isLoggedIn && !isOnHomeOrLogin && (
-              <Button
-                
-                onClick={handleClick}
-                className="bg-dark hover-darkgreen"
-              >
+              <Button onClick={handleClick} className="bg-dark hover-darkgreen">
                 Odhlásenie
               </Button>
             )}

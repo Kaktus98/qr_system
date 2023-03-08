@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { setId } from "../reducer/Actions";
-import { setRole } from "../reducer/Actions";
+import { setUser } from "../reducer/Actions";
 import { useDispatch } from "react-redux";
 
 const url = "http://localhost:8080/login";
@@ -36,9 +35,12 @@ const Login = () => {
       .then((data) => data["0"])
 
       .then((identifikator) => {
-        dispatch(setId(identifikator["id"]));
-        dispatch(setRole(identifikator["rola"])); // pridanie novej akcie SET_ROLE
-        console.log(identifikator["rola"]);
+        //dispatch(setId(identifikator["id"]));
+        //dispatch(setRole(identifikator["rola"])); // pridanie novej akcie SET_ROLE
+        dispatch(
+          setUser({ id: identifikator["id"], role: identifikator["rola"] })
+        );
+        //console.log(identifikator["rola"]);
         //navigate("/home");
         if (identifikator["rola"] === "STUDENT") {
           navigate("/homeStudent");
@@ -57,6 +59,7 @@ const Login = () => {
       <div className="p-5 bg-light rounded border">
         <form onSubmit={sendLoginRequest}>
           <div className="form-group">
+            <span style={{ margin: "30px"}}>Prihlásiť sa</span>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}

@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import { useSelector } from "react-redux";
 import "./StudentOverview.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { getSlovakDay } from "../components/utils/GetSlovakDay";
 
 const StudentOverview = () => {
   const [data, setData] = useState([]);
@@ -11,31 +12,8 @@ const StudentOverview = () => {
   const id_student = useSelector((state) => state.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const getSlovakDay = (id) => {
-    switch (id) {
-      case 0:
-        return "Nedela";
-      case 1:
-        return "Pondelok";
-      case 2:
-        return "Utorok";
-      case 3:
-        return "Streda";
-      case 4:
-        return "Stvrtok";
-      case 5:
-        return "Piatok";
-      case 6:
-        return "Sobota";
-      default:
-        return "null";
-    }
-  };
-
   useEffect(() => {
     const day = getSlovakDay(new Date(selectedDate).getUTCDay());
-    // const storedId = localStorage.getItem("id_student");
-    // const id = parseInt(storedId, 10);
     console.log(id_student);
     fetch(
       `http://localhost:8080/prehlad/${id_student}?den=${day}&nazov_predmetu=${selectedSubject}`
@@ -58,6 +36,7 @@ const StudentOverview = () => {
     "Softvérové Inžinierstvo",
     "Databázové systémy",
     "UX dizajn",
+    "Financie",
   ];
 
   return (
@@ -85,10 +64,6 @@ const StudentOverview = () => {
           </div>
         </div>
       </div>
-      {/* <label htmlFor="datePicker">Vyberte dátum:</label>
-
-      <br /> */}
-
       {data.length === 0 ? (
         <div className="noDataMessage">
           <p>Pre zvolený deň neexistuje záznam</p>
