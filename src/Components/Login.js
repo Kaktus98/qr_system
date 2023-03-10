@@ -35,13 +35,9 @@ const Login = () => {
       .then((data) => data["0"])
 
       .then((identifikator) => {
-        //dispatch(setId(identifikator["id"]));
-        //dispatch(setRole(identifikator["rola"])); // pridanie novej akcie SET_ROLE
         dispatch(
           setUser({ id: identifikator["id"], role: identifikator["rola"] })
         );
-        //console.log(identifikator["rola"]);
-        //navigate("/home");
         if (identifikator["rola"] === "STUDENT") {
           navigate("/homeStudent");
         } else if (identifikator["rola"] === "TEACHER") {

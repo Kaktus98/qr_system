@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-//import Header from "../components/header/Header";
 import DatePicker from "react-datepicker";
 import { useSelector } from "react-redux";
 import "./StudentOverview.css";

@@ -17,8 +17,12 @@ const Header = () => {
     navigate("/");
   };
 
+  const handleClickOverview = () => {
+    navigate("/prehladDochadzky"); //dokončiť
+  };
+
   const handleLogo = () => {
-    if (role === "STUDENT" && isLoggedIn ) {
+    if (role === "STUDENT" && isLoggedIn) {
       navigate("/homeStudent");
     } else if (role === "TEACHER" && isLoggedIn) {
       navigate("/homeTeacher");
@@ -32,6 +36,8 @@ const Header = () => {
   const isOnHomeOrLogin =
     location.pathname === "/" || location.pathname === "/login";
 
+  const roleIsTeacher = role === "TEACHER";
+
   return (
     <Navbar bg="primary" expand="lg">
       <Container>
@@ -42,6 +48,17 @@ const Header = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mx-auto">
             <Nav.Link href="#home"></Nav.Link>
+          </Nav>
+          <Nav>
+            {/*v prípade že je prihlásený učiteľ*/}
+            {isLoggedIn && !isOnHomeOrLogin && roleIsTeacher && (
+              <Button
+                onClick={handleClickOverview}
+                className="bg-dark hover-darkgreen"
+              >
+                Prehľad dochádzky
+              </Button>
+            )}
           </Nav>
           <Nav>
             {/* Kontrola, či má užívateľ byť prihlásený a aktuálna cesta nie je úvodná stránka alebo stránka prihlásenia */}

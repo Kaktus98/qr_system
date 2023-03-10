@@ -8,6 +8,7 @@ import HomePageStudent from "./student/HomePageStudent";
 import HomePageTeacher from "./components/HomePageTeacher";
 import StudentOverview from "./student/StudentOverview";
 import Header from "./components/header/Header";
+import QrCodePage from "./components/qrCode/QrCodePage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/homeStudent" element={<HomePageStudent />} />
           <Route path="/homeTeacher" element={<HomePageTeacher />} />
           <Route path="/studentOverview" element={<StudentOverview />} />
+          <Route path="/qrCode" element={<QrCodePage />} />
         </Routes>
       </BrowserRouter>
     </div>
