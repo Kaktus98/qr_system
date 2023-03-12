@@ -18,7 +18,7 @@ const Header = () => {
   };
 
   const handleClickOverview = () => {
-    navigate("/prehladDochadzky"); //dokončiť
+    navigate("/teacherOverview"); //dokončiť
   };
 
   const handleLogo = () => {
