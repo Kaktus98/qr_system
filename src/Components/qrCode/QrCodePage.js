@@ -19,9 +19,8 @@ const QrCodePage = () => {
         setUuidCode(uuidCode); // Vypíše novú hodnotu UUID
       })
       .catch((e) => console.error(e));
-  }, []);
+  }, [id_predmet]);
 
-  console.log(code);
 
   return (
     <div

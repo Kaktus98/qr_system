@@ -100,7 +100,12 @@ const TeacherOverviewPage = () => {
                         color: "blue",
                         cursor: "pointer",
                       }}
-                      onClick={() => handleClick(row.id_predmet, new Date())}
+                      onClick={() =>
+                        handleClick(
+                          row.id_predmet,
+                          new Date().toISOString().slice(0, 10)
+                        )
+                      }
                     >
                       Zoznam študentov/status
                     </span>

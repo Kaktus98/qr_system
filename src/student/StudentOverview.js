@@ -15,7 +15,7 @@ const StudentOverview = () => {
     const day = getSlovakDay(new Date(selectedDate).getUTCDay());
     console.log(id_student);
     fetch(
-      `http://localhost:8080/prehlad/${id_student}?den=${day}&nazov_predmetu=${selectedSubject}`
+      `http://localhost:8080/prehlad/student/${id_student}?den=${day}&nazov_predmetu=${selectedSubject}`
     )
       .then((r) => {
         if (!r.ok) {

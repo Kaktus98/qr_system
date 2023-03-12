@@ -1,57 +1,52 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { QrReader } from "react-qr-reader";
 
 const ScanningPage = () => {
-  const [uuidCode, setUuidCode] = useState(null);
-  const scannerRef = useRef(null);
   const id_student = useSelector((state) => state.id);
-
-  const sendValidationRequest = () => {
-    fetch(`http://localhost:8080/validate`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({ uuidCode, id_student }),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return Promise.all([response.json()]);
-        } else return Promise.reject("Invalid login attempt");
-      })
-      .then((data) => {
-        // spracovanie úspešnej odpovede
-        console.log(data);
-      })
-      .catch((error) => {
-        // spracovanie chyby
-        console.error(error);
-      });
-  };
-
-  const onScanSuccess = (decodedText, decodedResult) => {
-    console.log(`Scan result: ${decodedText}`, decodedResult);
- 
-    setUuidCode(decodedText);
-
-    sendValidationRequest();
-  };
+  const [uuidCode, setData] = useState(null);
 
   useEffect(() => {
-    const config = { fps: 10, qrbox: 250 };
-    const scanner = new Html5QrcodeScanner(
-      "reader",
-      config /* { fps: 10, qrbox: 250 } */
-    );
-    scannerRef.current = scanner;
-    scanner.render(onScanSuccess);
-  }, []);
+    if (uuidCode) {
+      fetch(`http://localhost:8080/validate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({ uuidCode, id_student }),
+      })
+        .then((response) => {
+          if (response.status === 204) {
+            return Promise.resolve();
+          } else return Promise.reject("Invalid scanning attempt");
+        })
+        .then((uuidCode) => {
+          // spracovanie úspešnej odpovede
+        })
+        .catch((error) => {
+          // spracovanie chyby
+          console.error(error);
+        });
+    }
+  }, [uuidCode, id_student]);
 
   return (
-    <div className="d-flex justify-content-center">
-      <div id="reader" style={{ width: "10%" }}></div>
+    <div>
+      <QrReader
+        onResult={(result, error) => {
+          if (!!result) {
+            setData(result?.text);
+            console.log(result?.text);
+          }
+
+          if (!!error) {
+            //console.info(error);
+          }
+        }}
+        style={{ width: "100%" }}
+        scanDelay={500} //kazda nova snimka po 500 milsec
+      />
     </div>
   );
 };

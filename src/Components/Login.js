@@ -55,7 +55,7 @@ const Login = () => {
       <div className="p-5 bg-light rounded border">
         <form onSubmit={sendLoginRequest}>
           <div className="form-group">
-            <span style={{ margin: "30px"}}>Prihlásiť sa</span>
+            <span style={{ margin: "30px" }}>Prihlásiť sa</span>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
