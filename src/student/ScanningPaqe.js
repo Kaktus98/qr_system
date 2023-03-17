@@ -1,10 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { QrReader } from "react-qr-reader";
+import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ScanningPage = () => {
+ const ScanningPage = () => {
+  const [showScanner, setShowScanner] = useState(true);
   const id_student = useSelector((state) => state.id);
   const [uuidCode, setData] = useState(null);
+  const navigate = useNavigate();
+  const [mounted, setMounted] = useState(true);
+
+  const notify = useCallback(() => {
+    toast("Úspešne prihlásený!", {
+      onClose: () =>
+        setTimeout(() => {
+          navigate("/studentOverview");
+        }, 5000),
+    });
+  }, [navigate]);
+
+  useEffect(() => {
+    return () => {
+      setMounted(false);
+    };
+  }, []);
 
   useEffect(() => {
     if (uuidCode) {
@@ -18,6 +40,8 @@ const ScanningPage = () => {
       })
         .then((response) => {
           if (response.status === 204) {
+            setShowScanner(false);
+            notify();
             return Promise.resolve();
           } else return Promise.reject("Invalid scanning attempt");
         })
@@ -29,26 +53,41 @@ const ScanningPage = () => {
           console.error(error);
         });
     }
-  }, [uuidCode, id_student]);
+  }, [uuidCode, id_student, notify]);
 
   return (
     <div>
-      <QrReader
-        onResult={(result, error) => {
-          if (!!result) {
-            setData(result?.text);
-            console.log(result?.text);
-          }
+      <div>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      </div>
+      {showScanner && (
+        <QrReader
+          onResult={(result, error) => {
+            if (!!result && mounted) {
+              setData(result?.text);
+              console.log(result?.text);
+            }
 
-          if (!!error) {
-            //console.info(error);
-          }
-        }}
-        style={{ width: "100%" }}
-        scanDelay={500} //kazda nova snimka po 500 milsec
-      />
+            if (!!error) {
+              //console.info(error);
+            }
+          }}
+          style={{ width: "100%" }}
+          scanDelay={500} //kazda nova snimka po 500 milsec
+        />
+      )}
     </div>
   );
-};
-
+}; 
 export default ScanningPage;

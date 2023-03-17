@@ -13,9 +13,8 @@ const TeacherOverviewPage = () => {
 
   useEffect(() => {
     const day = getSlovakDay(new Date(selectedDate).getUTCDay());
-    console.log(id_teacher);
     fetch(
-      selectedSubject
+      selectedSubject && selectedSubject !== "Všetky predmety"
         ? `http://localhost:8080/prehladPredmetov/${id_teacher}?den=${day}&nazov_predmetu=${selectedSubject}`
         : `http://localhost:8080/prehladPredmetov/${id_teacher}?den=${day}`
     )
@@ -30,6 +29,7 @@ const TeacherOverviewPage = () => {
   }, [selectedSubject, id_teacher, selectedDate]);
 
   const subjectNames = [
+    "Všetky predmety",
     "Matematika",
     "Ekonometria",
     "Manažment",
@@ -41,7 +41,6 @@ const TeacherOverviewPage = () => {
   ];
 
   const handleClick = (id_predmet, datum) => {
-    console.log(id_predmet);
     navigate("/teacherAttendanceOverview", { state: { id_predmet, datum } });
   };
 

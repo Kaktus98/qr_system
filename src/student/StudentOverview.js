@@ -7,15 +7,16 @@ import { getSlovakDay } from "../components/utils/GetSlovakDay";
 
 const StudentOverview = () => {
   const [data, setData] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState("Ekonometria");
+  const [selectedSubject, setSelectedSubject] = useState();
   const id_student = useSelector((state) => state.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
-    const day = getSlovakDay(new Date(selectedDate).getUTCDay());
-    console.log(id_student);
+    const day = getSlovakDay(new Date(selectedDate).getUTCDay())
     fetch(
-      `http://localhost:8080/prehlad/student/${id_student}?den=${day}&nazov_predmetu=${selectedSubject}`
+      selectedSubject && selectedSubject !== "Všetky predmety"
+        ? `http://localhost:8080/prehlad/student/${id_student}?den=${day}&nazov_predmetu=${selectedSubject}`
+        : `http://localhost:8080/prehlad/student/${id_student}?den=${day}`
     )
       .then((r) => {
         if (!r.ok) {
@@ -28,6 +29,7 @@ const StudentOverview = () => {
   }, [selectedSubject, id_student, selectedDate]); //ak sa zmeni jedna z hodnout tak sa zmení aj URL
 
   const subjects = [
+    "Všetky predmety",
     "Matematika",
     "Ekonometria",
     "Manažment",

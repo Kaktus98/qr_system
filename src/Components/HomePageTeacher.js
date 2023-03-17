@@ -10,15 +10,13 @@ const HomePageTeacher = () => {
   const navigate = useNavigate();
 
   const handleClick = (id_predmet) => {
-    console.log(id_predmet);
     navigate("/qrCode", { state: { id_predmet } });
   };
 
   useEffect(() => {
     const day = getSlovakDay(new Date().getUTCDay());
-    console.log(id_teacher);
     fetch(
-      selectedSubject
+      selectedSubject && selectedSubject !== "Všetky predmety"
         ? `http://localhost:8080/prehladPredmetov/${id_teacher}?den=${day}&nazov_predmetu=${selectedSubject}`
         : `http://localhost:8080/prehladPredmetov/${id_teacher}?den=${day}`
     )
@@ -33,6 +31,7 @@ const HomePageTeacher = () => {
   }, [selectedSubject, id_teacher]);
 
   const subjectNames = [
+    "Všetky predmety",
     "Matematika",
     "Ekonometria",
     "Manažment",

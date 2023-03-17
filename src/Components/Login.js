@@ -4,8 +4,6 @@ import "./Login.css";
 import { setUser } from "../reducer/Actions";
 import { useDispatch } from "react-redux";
 
-const url = "http://localhost:8080/login";
-
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -16,16 +14,15 @@ const Login = () => {
   const sendLoginRequest = (e) => {
     e.preventDefault();
     const requestBody = {
-      email: email,
+      emailLogin: email,
     };
-
     // POST request na endpoint /login
-    fetch(url, {
+    fetch(`http://localhost:8080/login`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody.email),
+      body: JSON.stringify( requestBody.emailLogin),
     })
       .then((response) => {
         if (response.status === 200) {
@@ -55,7 +52,7 @@ const Login = () => {
       <div className="p-5 bg-light rounded border">
         <form onSubmit={sendLoginRequest}>
           <div className="form-group">
-            <span style={{ margin: "30px" }}>Prihlásiť sa</span>
+            <span style={{ margin: "30px" }}>Prihlásenie</span>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
