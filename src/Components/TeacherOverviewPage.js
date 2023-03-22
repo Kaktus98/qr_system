@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 
 const TeacherOverviewPage = () => {
   const [subjects, setSubjects] = useState([]);
+  const [subjectNames, setSubjectNames] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState();
   const id_teacher = useSelector((state) => state.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -28,20 +29,25 @@ const TeacherOverviewPage = () => {
       .catch((e) => console.error(e));
   }, [selectedSubject, id_teacher, selectedDate]);
 
-  const subjectNames = [
-    "Všetky predmety",
-    "Matematika",
-    "Ekonometria",
-    "Manažment",
-    "Marketing",
-    "Softvérové Inžinierstvo",
-    "Databázové systémy",
-    "UX dizajn",
-    "Financie",
-  ];
+  useEffect(() => {
+    fetch(`http://localhost:8080/prehladPredmetov/predmetyUcitel/${id_teacher}`)
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to retrieve data");
+        }
+        return r.json();
+      })
+      .then((d) => {
+        const names = [...new Set(d.map((subject) => subject.nazov_predmetu))];
+        setSubjectNames(["Všetky predmety", ...names]);
+      })
+      .catch((e) => console.error(e));
+  }, [id_teacher]);
 
-  const handleClick = (id_predmet, datum) => {
-    navigate("/teacherAttendanceOverview", { state: { id_predmet, datum } });
+  const handleClick = (id_predmet, datum, skupina,nazov_predmetu) => {
+    navigate("/teacherAttendanceOverview", {
+      state: { id_predmet, datum, skupina,nazov_predmetu },
+    });
   };
 
   return (
@@ -102,7 +108,9 @@ const TeacherOverviewPage = () => {
                       onClick={() =>
                         handleClick(
                           row.id_predmet,
-                          new Date().toISOString().slice(0, 10)
+                          new Date().toISOString().slice(0, 10),
+                          row.skupina,
+                          row.nazov_predmetu
                         )
                       }
                     >

@@ -1,5 +1,4 @@
 import React from "react";
-import { Button, Navbar, Container, Nav } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -29,6 +28,10 @@ const Header = () => {
     }
   };
 
+  const handleClicTodaySubjects = () => {
+    navigate("/homeTeacher");
+  };
+
   // Kontrola, či je užívateľ prihlásený
   const isLoggedIn = id_visitor !== null;
 
@@ -38,39 +41,54 @@ const Header = () => {
 
   const roleIsTeacher = role === "TEACHER";
 
+  const isOverviewPage = location.pathname === "/teacherOverview";
+
   return (
-    <Navbar bg="primary" expand="lg">
-      <Container>
-        <Navbar.Brand href="#home" onClick={handleLogo}>
-          QR_AttendanceSystem
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mx-auto">
-            <Nav.Link href="#home"></Nav.Link>
-          </Nav>
-          <Nav>
-            {/*v prípade že je prihlásený učiteľ*/}
-            {isLoggedIn && !isOnHomeOrLogin && roleIsTeacher && (
-              <Button
-                onClick={handleClickOverview}
-                className="bg-dark hover-darkgreen"
-              >
-                Prehľad dochádzky
-              </Button>
-            )}
-          </Nav>
-          <Nav>
-            {/* Kontrola, či má užívateľ byť prihlásený a aktuálna cesta nie je úvodná stránka alebo stránka prihlásenia */}
-            {isLoggedIn && !isOnHomeOrLogin && (
-              <Button onClick={handleClick} className="bg-dark hover-darkgreen">
-                Odhlásenie
-              </Button>
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <div
+      className={
+        "grid justify-content-between align-items-center pt-3 pb-2 pr-3 pl-4"
+      }
+      style={{
+        background: "#4170c5",
+        fontSize: 25,
+      }}
+    >
+      <div
+        className="cursor-pointer flex col-12 justify-content-center lg:justify-content-start lg:col-6"
+        onClick={handleLogo}
+      >
+        QR_AttendanceSystem
+      </div>
+
+      <div className={"col-12 flex justify-content-end lg:col-6"}>
+        {isLoggedIn && !isOnHomeOrLogin && roleIsTeacher && !isOverviewPage && (
+          <button
+            onClick={handleClickOverview}
+            className={"mr-3"}
+            style={{ background: "#E6D0BC", borderColor: "black" }}
+          >
+            Prehľad dochádzky
+          </button>
+        )}
+        {isOverviewPage && (
+          <button
+            onClick={handleClicTodaySubjects}
+            className={"mr-3"}
+            style={{ background: "#E6D0BC", borderColor: "black" }}
+          >
+            Dnešné predmety
+          </button>
+        )}
+        {isLoggedIn && !isOnHomeOrLogin && (
+          <button
+            style={{ background: "#E6D0BC", borderColor: "black" }}
+            onClick={handleClick}
+          >
+            Odhlásenie
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 

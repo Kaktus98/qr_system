@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const HomePageTeacher = () => {
   const [subjects, setSubjects] = useState([]);
+/*   const [teacherSubjects, setTeacherSubjects] = useState([]); */
+  const [subjectNames, setSubjectNames] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState();
   const id_teacher = useSelector((state) => state.id);
   const navigate = useNavigate();
@@ -30,23 +32,30 @@ const HomePageTeacher = () => {
       .catch((e) => console.error(e));
   }, [selectedSubject, id_teacher]);
 
-  const subjectNames = [
-    "Všetky predmety",
-    "Matematika",
-    "Ekonometria",
-    "Manažment",
-    "Marketing",
-    "Softvérové Inžinierstvo",
-    "Databázové systémy",
-    "UX dizajn",
-    "Financie",
-  ];
+  useEffect(() => {
+    fetch(`http://localhost:8080/prehladPredmetov/predmetyUcitel/${id_teacher}`)
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to retrieve data");
+        }
+        return r.json();
+      })
+      .then((d) => {
+        /* const names = d.map((subject) => subject.nazov_predmetu);
+        setSubjectNames(["Všetky predmety", ...names]); */
+        const names = [...new Set(d.map((subject) => subject.nazov_predmetu))];
+        setSubjectNames(["Všetky predmety", ...names]);
+      })
+      .catch((e) => console.error(e));
+  }, [id_teacher]);
+
+  /* const subjectNames = ["Všetky predmety", ...teacherSubjects]; */
 
   return (
     <>
       <div className="d-flex justify-content-center mb-3">
         <div className="form-group">
-          <select
+          {/* <select
             className="form-control"
             id="subjectDropdown"
             value={selectedSubject}
@@ -55,6 +64,18 @@ const HomePageTeacher = () => {
             {subjectNames.map((subj) => (
               <option key={subj} value={subj}>
                 {subj}
+              </option>
+            ))}
+          </select> */}
+          <select
+            className="form-control"
+            id="subjectDropdown"
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+          >
+            {subjectNames.map((subject) => (
+              <option key={subject} value={subject}>
+                {subject}
               </option>
             ))}
           </select>
