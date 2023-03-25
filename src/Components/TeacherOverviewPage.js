@@ -6,6 +6,7 @@ import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { addDays } from "date-fns";
 
 const TeacherOverviewPage = () => {
   const [subjects, setSubjects] = useState([]);
@@ -99,22 +100,24 @@ const TeacherOverviewPage = () => {
               className="w-full"
             />
           </div>
-          {/* <select
-            className="form-control"
-            id="subjectDropdown"
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-          >
-            {subjectNames.map((subj) => (
-              <option key={subj} value={subj}>
-                {subj}
-              </option>
-            ))}
-          </select> */}
           <div className="w-full lg:w-16rem mb-3">
-            <Calendar
+            {/* <Calendar
               value={selectedDate}
               onChange={(date) => setSelectedDate(date.value)}
+              className="w-full"
+            /> */}
+            {/* <Calendar
+              value={selectedDate}
+              onChange={(date) => {
+                const newDate = new Date(date.value);
+                newDate.setDate(newDate.getDate() + 1);
+                setSelectedDate(newDate);
+              }}
+              className="w-full"
+            /> */}
+            <Calendar
+              value={selectedDate}
+              onChange={(date) => setSelectedDate(addDays(date.value, 1))}
               className="w-full"
             />
           </div>

@@ -14,7 +14,7 @@ const HomePageTeacher = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const day = getSlovakDay(new Date().getUTCDay() - 1);
+    const day = getSlovakDay(new Date().getUTCDay());
     fetch(
       selectedSubject && selectedSubject !== "Všetky predmety"
         ? `http://localhost:8080/prehladPredmetov/${id_teacher}?den=${day}&nazov_predmetu=${selectedSubject}`

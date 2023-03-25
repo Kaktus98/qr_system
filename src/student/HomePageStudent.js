@@ -9,10 +9,17 @@ const HomePage = () => {
   const handleClick = () => {
     setIsLoading(true);
     navigate("/studentOverview");
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
   };
 
   const handleClickScanner = () => {
+    setIsLoading(true);
     navigate("/scanningQrCode");
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
   };
 
   if (isLoading) {
