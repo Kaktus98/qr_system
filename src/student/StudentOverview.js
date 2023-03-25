@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-/* import DatePicker from "react-datepicker"; */
 import { useSelector } from "react-redux";
-import "./StudentOverview.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { getSlovakDay } from "../components/utils/GetSlovakDay";
+import { Dropdown } from "primereact/dropdown";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const StudentOverview = () => {
   const [data, setData] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState();
+  const [subjectNames, setSubjectNames] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState("Všetky predmety");
   const id_student = useSelector((state) => state.id);
   const [selectedDay, setSelectedDay] = useState(
     getSlovakDay(new Date().getUTCDay())
   );
 
   useEffect(() => {
-    /* const day = getSlovakDay(new Date(selectedDate).getUTCDay()) */
     fetch(
       selectedSubject && selectedSubject !== "Všetky predmety"
         ? `http://localhost:8080/prehlad/student/${id_student}?den=${selectedDay}&nazov_predmetu=${selectedSubject}`
@@ -30,17 +31,34 @@ const StudentOverview = () => {
       .catch((e) => console.error(e));
   }, [selectedSubject, id_student, selectedDay]); //ak sa zmeni jedna z hodnout tak sa zmení aj URL
 
-  const subjects = [
-    "Všetky predmety",
-    "Matematika",
-    "Ekonometria",
-    "Manažment",
-    "Marketing",
-    "Softvérové Inžinierstvo",
-    "Databázové systémy",
-    "UX dizajn",
-    "Financie",
-  ];
+  useEffect(() => {
+    fetch(
+      `http://localhost:8080/prehladPredmetov/predmetyStudent/${id_student}`
+    )
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to retrieve data");
+        }
+        return r.json();
+      })
+      .then((d) => {
+        const names = [...new Set(d.map((subject) => subject.nazov_predmetu))];
+        setSubjectNames(["Všetky predmety", ...names]);
+      })
+      .catch((e) => console.error(e));
+  }, [id_student]);
+
+  const statusBodyTemplate = (row) => {
+    const statusStyle = {
+      background: row.status ? "#7AEA90" : "#D98886",
+      display: "block",
+      padding: "0.5rem",
+      border: "1px solid #000000",
+    };
+    return (
+      <span style={statusStyle}>{row.status ? "Prítomný" : "Neprítomný"}</span>
+    );
+  };
 
   const weekDays = [
     "Pondelok",
@@ -54,55 +72,54 @@ const StudentOverview = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-center mb-3 mt-5">
-        <div className="p-d-flex p-jc-center">
-          <select
-            className="form-control"
-            id="subjectDropdown"
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-            style={{ margin: "0 auto" }}
-          >
-            {subjects.map((subject) => (
-              <option key={subject} value={subject}>
-                {subject}
-              </option>
-            ))}
-          </select>
-          <select
-            className="form-control"
-            id="weekDays"
-            value={selectedDay}
-            onChange={(e) => setSelectedDay(e.target.value)}
-            style={{ margin: "0 auto" }}
-          >
-            {weekDays.map((days) => (
-              <option key={days} value={days}>
-                {days}
-              </option>
-            ))}
-          </select>
+      <div className="mr-1 ml-1 mt-3">
+        <div className="flex flex-column lg:flex-row lg:justify-content-around justify-content-center ">
+          <div className="w-full lg:w-16rem mb-3">
+            <Dropdown
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+              options={subjectNames}
+              className="w-full"
+            />
+          </div>
+          <div className="w-full lg:w-16rem mb-3">
+            <Dropdown
+              value={selectedDay}
+              onChange={(e) => setSelectedDay(e.target.value)}
+              options={weekDays}
+              className="w-full"
+            />
+          </div>
         </div>
+        {data.length === 0 ? (
+          <div className="noDataMessage">
+            <p>Pre zvolený deň neexistuje záznam</p>
+          </div>
+        ) : (
+          <div className="m-4">
+            <DataTable stripedRows value={data}>
+              <Column field="meno" header="Meno"></Column>
+              <Column field="priezvisko" header="Priezvisko"></Column>
+              <Column field="den" header="deň"></Column>
+              <Column field="nazov_predmetu" header="Predmet"></Column>
+              <Column
+                field="status"
+                header="Status"
+                body={statusBodyTemplate}
+              />
+              <Column field="datum" header="Dátum"></Column>
+            </DataTable>
+          </div>
+        )}
       </div>
-      {data.length === 0 ? (
-        <div className="noDataMessage">
-          <p>Pre zvolený deň neexistuje záznam</p>
-        </div>
-      ) : (
-        <div className="p-d-flex p-jc-center">
-          <table
-            className="p-table table-striped table-bordered table-hover align-middle"
-            style={{
-              border: "1px solid black",
-              borderCollapse: "collapse",
-              width: "50%",
-              margin: "0 auto",
-            }}
-          >
-            <thead
-              className="table-secondary"
-              style={{ border: "1px solid black" }}
-            >
+    </>
+  );
+};
+
+export default StudentOverview;
+
+/* <table className="p-table table-striped table-bordered table-hover align-middle">
+            <thead>
               <tr>
                 <th>Meno</th>
                 <th>Priezvisko</th>
@@ -114,64 +131,20 @@ const StudentOverview = () => {
             </thead>
             <tbody>
               {data.map((row, i) => (
-                <tr key={i}>
-                  <td style={{ border: "1px solid black" }}>{row.meno}</td>
-                  <td style={{ border: "1px solid black" }}>
-                    {row.priezvisko}
-                  </td>
-                  <td style={{ border: "1px solid black" }}>{row.den}</td>
-                  <td style={{ border: "1px solid black" }}>
-                    {row.nazov_predmetu}
-                  </td>
+                <tr key={i} className="hoverable">
+                  <td>{row.meno}</td>
+                  <td>{row.priezvisko}</td>
+                  <td>{row.den}</td>
+                  <td>{row.nazov_predmetu}</td>
                   <td
                     style={{
                       background: row.status ? "#7AEA90" : "#D98886",
-                      border: "1px solid black",
                     }}
                   >
                     {row.status ? "Prítomný" : "Neprítomný"}
                   </td>
-                  <td style={{ border: "1px solid black" }}>{row.datum}</td>
+                  <td>{row.datum}</td>
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
-      )}
-    </>
-  );
-};
-
-export default StudentOverview;
-
-//table
-/* <div className="d-flex justify-content-center ">
-<table className="table table-striped table-bordered table-hover align-middle" style={{borderColor: "black"}}>
-<thead className="table-secondary" >
-  <tr>
-    <th style={{width: 250}} >Meno</th>
-    <th style={{width: 250}}>Priezvisko</th>
-    <th style={{width: 250}}>Deň</th>
-    <th style={{width: 250}}>Predmet</th>
-    <th style={{width: 250}}>Status</th>
-    <th style={{width: 250}}>Dátum </th>
-  </tr>
-</thead>
-<tbody>
-  {data.map((row, i) => (
-    <tr key={i}>
-      <td>{row.meno}</td>
-      <td>{row.priezvisko}</td>
-      <td>{row.den}</td>
-      <td>{row.nazov_predmetu}</td>
-      <td
-        style={{ background: row.status ? "#7AEA90" : "#D98886" }}
-      >
-        {row.status ? "Prítomný" : "Neprítomný"}
-      </td>
-      <td>{row.datum}</td>
-    </tr>
-  ))}
-</tbody>
-</table>
-  </div> */
+          </table> */

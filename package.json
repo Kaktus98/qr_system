@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.3",
     "primeflex": "^3.3.0",
+    "primeicons": "^6.0.1",
+    "primereact": "^9.2.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-datepicker": "^4.10.0",

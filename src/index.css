@@ -7,6 +7,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #e6d0bc;
 }
+/* .menu {
+  /*   position: absolute; 
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white; 
+
+  animation-name: move;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+ transition: top 0.8s ease-in-out; 
+}
+
+@keyframes move {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(100px, 100px);
+  }
+} */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -24,7 +46,7 @@ code {
   .loginDiv {
     margin: 0 auto;
     max-width: 90%;
-  } 
+  }
 }
 
 .loginForm {
@@ -32,7 +54,7 @@ code {
   border-radius: 5px;
   padding: 40px;
   background-color: #e59c82;
-  width: 250px;
+  width: 300px;
 }
 
 .btnLogin {
@@ -49,6 +71,15 @@ code {
 
 .form-control {
   width: 220px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+#datePicker {
+  width: 205px;
   margin: 0 auto;
   margin-top: 20px;
   padding: 5px;
@@ -81,7 +112,6 @@ button {
   -webkit-user-select: none;
   touch-action: manipulation;
   will-change: transform;
-  margin-top: 20px;
 }
 
 button:disabled {
@@ -100,12 +130,32 @@ button:active {
   transform: translateY(0);
 }
 
-.tr {
+table {
+  border: 1px solid black;
+  width: 600px;
+  margin: 0 auto;
+}
+
+tr {
   width: 300;
-  border: "1px solid black";
+  border: 1px solid black;
+  padding: 20px;
+}
+
+td {
+  width: 300;
+  border: 1px solid black;
+  padding: 10px;
+  background-color: #e6d0bc;
 }
 
 th {
   width: 300;
-  border: "1px solid black";
+  border: 1px solid black;
+  padding: 10px;
 }
+
+tr:last-child {
+  border-bottom: 1px solid #000000;
+}
+

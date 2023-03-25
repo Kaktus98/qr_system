@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { exportToExcel } from "../components/utils/ExportToExcel";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const TeacherAttendancePage = () => {
   const [studentList, setStudentList] = useState([]);
@@ -64,16 +66,63 @@ const TeacherAttendancePage = () => {
     exportToExcel(studentList, `${nazov_predmetu}_Sk${skupina}_${datum}`);
   };
 
+  const statusBodyTemplate = (row) => {
+    const statusStyle = {
+      background:
+        row.status === "Pritomný"
+          ? "#79d191"
+          : row.status === "Nepritomný"
+          ? "#DB8C87"
+          : "#E3D27F",
+      display: "block",
+      padding: "0.5rem",
+      border: "1px solid #000000",
+    };
+    return (
+      <span style={statusStyle}>
+        style=
+        {{
+          background:
+            row.status === "Pritomný"
+              ? "#79d191"
+              : row.status === "Nepritomný"
+              ? "#DB8C87"
+              : "#E3D27F",
+        }}
+      </span>
+    );
+  };
+
   return (
     <>
-      <div>
-        <button className="btn btn-success" onClick={handleExport}>
+      <div className="mr-1 ml-1 mt-3">
+        <div className="m-4">
+          <DataTable stripedRows value={studentList}>
+            <Column field="meno" header="Meno"></Column>
+            <Column field="priezvisko" header="Priezvisko"></Column>
+            <Column
+              field="status"
+              header="Status"
+              body={statusBodyTemplate}
+            ></Column>
+          </DataTable>
+        </div>
+        <button
+          className="mt-3"
+          onClick={handleExport}
+          style={{ backgroundColor: "#339E53" }}
+        >
           Exportovanie do Excelu
         </button>
       </div>
-      <div className="d-flex justify-content-center">
-        <table className="table table-striped table-bordered table-hover align-middle">
-          <thead className="table-secondary">
+    </>
+  );
+};
+
+export default TeacherAttendancePage;
+
+/* <table>
+          <thead>
             <tr>
               <th>Meno</th>
               <th>Priezvisko</th>
@@ -100,10 +149,4 @@ const TeacherAttendancePage = () => {
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
-    </>
-  );
-};
-
-export default TeacherAttendancePage;
+        </table> */
